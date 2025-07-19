@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "init": "npx tsc -w",
-    "deploy": "clasp push ./dist --force && clasp push ./pages"
+    "watch": "npx tsc -w",
+    "deploy": "clasp push"
   },
   "keywords": [],
   "author": "",
