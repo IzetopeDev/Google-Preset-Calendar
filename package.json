@@ -8,5 +8,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@types/google-apps-script": "^1.0.99",
+    "typescript": "^5.8.3"
+  }
 }

@@ -1,1 +1,8 @@
 .clasp*
+
+node_modules/
+
+tsconfig.json
+dist/
+
+
