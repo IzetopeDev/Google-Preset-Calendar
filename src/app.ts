@@ -1,4 +1,3 @@
-function myFunction(): void {
-    console.log("testing");
-    //lsjkdfl
+function doGet(): GoogleAppsScript.HTML.HtmlOutput {
+  return HtmlService.createHtmlOutputFromFile('pages/dashboard.html');
 }

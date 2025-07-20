@@ -13,5 +13,9 @@
   "devDependencies": {
     "@types/google-apps-script": "^1.0.99",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@google/clasp": "^3.0.6-alpha",
+    "googleapis": "^153.0.0"
   }
 }

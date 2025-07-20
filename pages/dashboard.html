@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #ffffff;
+        }
+
+        .calendar {
+            border: none;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        #summary {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        #avail-timings-table {
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        th {
+            background-color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="title">Shared Calendar Dashboard</h1>
+    <iframe
+        class="calendar"
+        src="https://calendar.google.com/calendar/embed?src=obf3qtik6tttel6ea3rd3mbki8%40group.calendar.google.com&ctz=Asia%2FKuala_Lumpur"
+        frameborder="0"
+        scrolling="no">
+    </iframe>
+
+    <div id="summary">
+        <h2>Available Timings</h2>
+        <div id="avail-timings-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time Slot</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>July 22, 2025</td>
+                        <td>10:00 AM - 11:00 AM</td>
+                        <td>Available</td>
+                    </tr>
+                    <tr>
+                        <td>July 22, 2025</td>
+                        <td>2:00 PM - 3:00 PM</td>
+                        <td>Available</td>
+                    </tr>
+                    <tr>
+                        <td>July 23, 2025</td>
+                        <td>9:00 AM - 10:00 AM</td>
+                        <td>Booked</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
