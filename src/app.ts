@@ -36,3 +36,18 @@ function doGet(): GoogleAppsScript.HTML.HtmlOutput {
   return HtmlService.createHtmlOutputFromFile('pages/dashboard.html')
     .setTitle(getTitle(false, pages.dashboard));
 }
+
+/**
+ * Calls the specified page.
+ * @param {boolean} enableVerbose - Whether or not to enable verbose logging.
+ * @param {pages} page - the page to call (as defined by enums)
+ * @returns {GoogleAppsScript.HTML.HtmlOutput} The HTML output of the page.
+ */
+function callPage(enableVerbose: boolean, page: pages): GoogleAppsScript.HTML.HtmlOutput {
+  console.info('callPage() called');
+  if (enableVerbose) {console.log('page :>> ', page);}
+  
+  return HtmlService.createHtmlOutputFromFile(`pages/${page}.html`)
+    .setTitle(getTitle(false, page));
+}
+
