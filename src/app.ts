@@ -27,15 +27,6 @@ function getTitle(enableVerbose: boolean, page: pages): string {
 }
 
 
-/**
- * Called when the script is opened in a web browser.
- * @returns {GoogleAppsScript.HTML.HtmlOutput} The HTML output of the dashboard page.
- */
-function doGet(): GoogleAppsScript.HTML.HtmlOutput {
-  console.info('doGet() called');
-  return HtmlService.createHtmlOutputFromFile('pages/dashboard.html')
-    .setTitle(getTitle(false, pages.dashboard));
-}
 
 /**
  * Calls the specified page.
@@ -55,6 +46,9 @@ function onLoad(): void {
   // Runs when the script site is opened.
 }
 
+function include(file: string): string {
+  return HtmlService.createHtmlOutputFromFile(file).getContent();
+}
 
 /*
 // chatgpt added code:
@@ -72,3 +66,29 @@ function closePresetEditor() {
     document.getElementById('preset-editor-overlay').style.display = 'none';
 }
 */
+
+
+
+
+
+/*
+* core caller functions
+* DO NOT REMOVE
+*/
+
+/**
+ * Called when the script is opened in a web browser.
+ * @returns {GoogleAppsScript.HTML.HtmlOutput} The HTML output of the dashboard page.
+ */
+function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutput {
+  console.info('doGet() called');
+  console.log('e :>> ', e);
+  return HtmlService.createHtmlOutputFromFile("00site/index");
+}
+
+
+function doPost(e:GoogleAppsScript.Events.DoPost) {
+  console.info('doPost() called');
+  console.log('e :>> ', e);
+  return ContentService.createTextOutput('Received POST');
+}
