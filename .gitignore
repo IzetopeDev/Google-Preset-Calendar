@@ -7,4 +7,3 @@ deployVersion.ts
 
 tsconfig.json
 01dist/
-.env

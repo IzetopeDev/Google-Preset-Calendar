@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@google/clasp": "^3.0.6-alpha",
-    "dotenv": "^17.2.1",
     "googleapis": "^153.0.0"
   }
 }
