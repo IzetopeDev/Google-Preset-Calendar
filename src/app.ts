@@ -51,3 +51,24 @@ function callPage(enableVerbose: boolean, page: pages): GoogleAppsScript.HTML.Ht
     .setTitle(getTitle(false, page));
 }
 
+function onLoad(): void {
+  // Runs when the script site is opened.
+}
+
+
+/*
+// chatgpt added code:
+
+// in a script tag
+function googleLogin() {
+    // Call Apps Script login function or redirect
+}
+
+function openPresetEditor() {
+    document.getElementById('preset-editor-overlay').style.display = 'block';
+}
+
+function closePresetEditor() {
+    document.getElementById('preset-editor-overlay').style.display = 'none';
+}
+*/
