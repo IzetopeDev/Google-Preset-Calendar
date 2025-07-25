@@ -5,4 +5,4 @@ node_modules/
 deployVersion.ts
 
 tsconfig.json
-dist/
+01dist/
