@@ -1,4 +1,5 @@
 .clasp*
+appsscript.json
 
 node_modules/
 *.bat
