@@ -1,8 +1,3 @@
-// env variables (supposed to be taken from user's excel settings file)
-const enableVerbose = true; 
-
-
-
 /**
  * Includes a file in the current page.
  * @param {string} file The name of the file to include.
@@ -43,6 +38,11 @@ function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutpu
         .createTemplateFromFile("00site/index.html")
         .evaluate();
 }
+    console.info('doGet() called');
+    console.log('e :>> ', e);
+    return HtmlService.createHtmlOutputFromFile("00site/index");
+}
+
 
 function doPost(e:GoogleAppsScript.Events.DoPost) {
     console.info('doPost() called');
