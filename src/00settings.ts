@@ -4,6 +4,16 @@ enum possibleFixes {
     createFile = "createFile",
 }
 
+function insertSpreadsheetTemplate(spreadsheetID: string) {
+    console.info("insertSpreadsheetTemplate() called");
+    console.log(`spreadsheetID :>> ${spreadsheetID}`);
+
+    const spreadsheet = {
+        obj: SpreadsheetApp.openById(spreadsheetID),
+        id: spreadsheetID,
+    };
+}
+
 class userSettings {
     userDriveID: string | null;
     enableVerbose: boolean;
@@ -88,8 +98,5 @@ class userSettings {
                 break;
         }
     }
-
-
 }
-const enableVerbose = true; 
-const calendars: [string] = [""];
+
