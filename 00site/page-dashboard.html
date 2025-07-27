@@ -1,8 +1,14 @@
-<?!= include('style-dashboard') ?>
 <div class="dashboard-container" id="dashboard" style="display:none;">
     <h1>Dashboard</h1>
     
     <div class="dashboard-grid">
+        <?!= getCalendar() ?>
+        <select name="calendars" id="calendar-selector">
+            <!-- 
+                JS-filled options 
+                <option value="calendarURL from sheetsDatabase">Calendar Name</option> 
+            -->
+        </select>
         <?!= include("00site/module-presetManager") ?>
         <?!= include("00site/module-groupAvailableTimings") ?>
     </div>

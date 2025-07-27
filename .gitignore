@@ -6,4 +6,5 @@ node_modules/
 deployVersion.ts
 
 tsconfig.json
+.vscode/
 01dist/
