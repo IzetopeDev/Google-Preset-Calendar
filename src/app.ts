@@ -38,10 +38,6 @@ function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutpu
         .createTemplateFromFile("00site/index.html")
         .evaluate();
 }
-    console.info('doGet() called');
-    console.log('e :>> ', e);
-    return HtmlService.createHtmlOutputFromFile("00site/index");
-}
 
 
 function doPost(e:GoogleAppsScript.Events.DoPost) {
