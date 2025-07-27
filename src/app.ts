@@ -21,9 +21,23 @@ function include(file: string): string {
 
 /**
  * Called when the script is opened in a web browser.
+ * @param {GoogleAppsScript.Events.DoGet} e The event object.
  * @returns {GoogleAppsScript.HTML.HtmlOutput} The HTML output of the dashboard page.
  */
 function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutput {
+    console.info('doGet() called');
+    if (enableVerbose) {
+        console.log('e :>> ', e);
+        console.log('Session :>> ', Session);
+        console.log('Session.getActiveUser() :>> ', Session.getActiveUser().toString());
+        console.log('Session.getEffectiveUser() :>> ', Session.getEffectiveUser().toString());
+        console.log('Session.getActiveUserLocale() :>> ', Session.getActiveUserLocale().toString());
+    }
+    
+    return HtmlService
+        .createTemplateFromFile("00site/index.html")
+        .evaluate();
+}
     console.info('doGet() called');
     console.log('e :>> ', e);
     return HtmlService.createHtmlOutputFromFile("00site/index");
@@ -35,3 +49,4 @@ function doPost(e:GoogleAppsScript.Events.DoPost) {
     console.log('e :>> ', e);
     return ContentService.createTextOutput('Received POST');
 }
+
