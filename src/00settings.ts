@@ -4,22 +4,47 @@ enum possibleFixes {
     createFile = "createFile",
 }
 
-function insertSpreadsheetTemplate(spreadsheetID: string) {
+function insertSpreadsheetTemplate(spreadsheetID: string): boolean {
     console.info("insertSpreadsheetTemplate() called");
-    console.log(`spreadsheetID :>> ${spreadsheetID}`);
-
-    const spreadsheet = {
-        obj: SpreadsheetApp.openById(spreadsheetID),
-        id: spreadsheetID,
-    };
 }
 
-class userSettings {
-    userDriveID: string | null;
+/**
+ * Waits for a folder to appear in the user's Drive.
+ * @param {string} folderName The name of the folder to wait for.
+ * @param {number} interval The interval in milliseconds to check for the folder's existence.
+ * @returns {boolean} A boolean indicating if the folder was found.
+ */
+function watchForFolder(folderName: string, interval = 1000): boolean {
+    console.info("watchForFolder() called");
+    if (settings.enableVerbose) {console.log(`folderName :>> ${folderName}, interval :>> ${interval}`);}
+    
+    let i = 0;
+    while (i < 60) {
+        const folderExists = DriveApp.getFoldersByName(folderName).hasNext();
+        if (folderExists) {
+            if (settings.enableVerbose) {console.log("folder found!");}
+            return true;
+        }
+        
+        if (settings.enableVerbose) {console.log(`folder not found. sleeping for ${interval}ms...`);}
+        Utilities.sleep(interval);
+        i++;
+    }
+
+    return false
+}
+
+
+class UserSettings {
+    userDriveID: string | undefined;
     enableVerbose: boolean;
 
     constructor() {
-        this.userDriveID = null;
+        //default settings:
+        this.userDriveID = undefined;
+        this.enableVerbose = true; // to change to false in production
+
+
         
         let userSettingsCheck = this.hasUserSettings();
         if (userSettingsCheck.outcome) {
@@ -27,8 +52,6 @@ class userSettings {
         } else {
             this.createUserSettings(userSettingsCheck.fix);
         }
-
-        this.enableVerbose = true;
         
     }
 
@@ -40,7 +63,7 @@ class userSettings {
      * - `fix`: A suggested fix action from `possibleFixes` enum if settings are not found, or `null` if settings exist.
      * - `id`: The ID of the settings file if it exists, otherwise `null`.
      */
-    hasUserSettings(): {outcome: boolean, fix: possibleFixes | null, id: string | null} {
+    hasUserSettings(): {outcome: boolean, fix?: possibleFixes, id?: string} {
         console.info("hasUserSettings() called");
 
         const folders = DriveApp.getFoldersByName("google-preset-calendar-script");
@@ -50,7 +73,7 @@ class userSettings {
         const folderExists = folders.hasNext();
         if (!folderExists) {
             if (this.enableVerbose) {console.log("folder does not exist");}
-            return {outcome: false, fix: possibleFixes.createFolder, id: null};
+            return {outcome: false, fix: possibleFixes.createFolder};
         }
         if (this.enableVerbose) {console.log("folder exists");}
 
@@ -60,16 +83,16 @@ class userSettings {
         const settingsFileExists = settingsFiles.hasNext();
         if (!settingsFileExists) {
             if (this.enableVerbose) {console.log("settings file does not exist");}
-            return {outcome: false, fix: possibleFixes.createFile, id: null};
+            return {outcome: false, fix: possibleFixes.createFile};
         }
         const settingsFileID = settingsFiles.next().getId();
         if (this.enableVerbose) {console.log(`settings file exists, id: ${settingsFileID}`);}
 
-        return {outcome: true, fix: null, id: settingsFileID};
+        return {outcome: true, id: settingsFileID};
 
     }
 
-    createUserSettings(suggestedSolution: possibleFixes | null): void  {
+    createUserSettings(suggestedSolution: possibleFixes | undefined): void  {
         console.info("createUserSettings() called");
         if (this.enableVerbose) {console.log(`suggestedSolution :>> ${suggestedSolution}`);}
 
@@ -77,24 +100,30 @@ class userSettings {
             case possibleFixes.createFolder:
                 if (this.enableVerbose) {console.log("creating folder...");}
                 DriveApp.createFolder("google-preset-calendar-script");
+                watchForFolder("google-preset-calendar-script");
                 this.createUserSettings(possibleFixes.createFile);
                 break;
             
             case possibleFixes.createFile:
                 if (this.enableVerbose) {console.log("creating spreadsheet...");}
                 const spreadsheet = SpreadsheetApp.create("Google_Preset_Calendar_Settings");
-                const spreadsheetID = DriveApp.getFileById(spreadsheet.getId());
-                if (this.enableVerbose) {console.log(`spreadsheetID :>> ${spreadsheetID}, moving file to folder...`);}
+                const spreadsheetID = spreadsheet.getId();
 
-                DriveApp.getFoldersByName("google-preset-calendar-script").next().addFile(spreadsheetID);
-                DriveApp.getRootFolder().removeFile(spreadsheetID);
+                if (this.enableVerbose) {console.log("inserting spreadsheet template...");}
+                const isTemplateInserted = insertSpreadsheetTemplate(spreadsheetID);
+                if (!isTemplateInserted) {console.error("spreadsheet template not inserted!")}
+
+                if (this.enableVerbose) {console.log(`spreadsheetID :>> ${spreadsheetID}, moving file to folder...`);}
+                const spreadsheetFile = DriveApp.getFileById(spreadsheetID);
+                DriveApp.getFoldersByName("google-preset-calendar-script").next().addFile(spreadsheetFile);
+                DriveApp.getRootFolder().removeFile(spreadsheetFile);
                 break;
 
-            case null:
-
+            case undefined:
+                console.error("param suggestedSolution :>> undefined. No fixes to apply. Was this function illegally called?");
                 break;
             default:
-
+                console.error("uncaught instance of param suggestedSolution! Unable to apply fixes for user settings. Was this function illegally called?");
                 break;
         }
     }

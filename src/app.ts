@@ -1,3 +1,8 @@
+// init globals
+const settings = new UserSettings();
+
+
+
 /**
  * Includes a file in the current page.
  * @param {string} file The name of the file to include.
@@ -5,7 +10,7 @@
  */
 function include(file: string): string {
     console.info('include() called');
-    if (enableVerbose) {console.log('file :>> ', file);}
+    if (settings.enableVerbose) {console.log('file :>> ', file);}
 
     return HtmlService.createHtmlOutputFromFile(file).getContent();
 }
@@ -25,7 +30,7 @@ function include(file: string): string {
  */
 function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutput {
     console.info('doGet() called');
-    if (enableVerbose) {
+    if (settings.enableVerbose) {
         console.log('e :>> ', e);
         console.log('Session :>> ', Session);
         console.log('Session.getActiveUser() :>> ', Session.getActiveUser().toString());
