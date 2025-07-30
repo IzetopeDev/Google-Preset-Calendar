@@ -4,17 +4,13 @@ enum possibleFixes {
     createFile = "createFile",
 }
 
-function insertSpreadsheetTemplate(spreadsheetID: string): boolean {
-    console.info("insertSpreadsheetTemplate() called");
-}
-
 /**
  * Waits for a folder to appear in the user's Drive.
  * @param {string} folderName The name of the folder to wait for.
  * @param {number} interval The interval in milliseconds to check for the folder's existence.
  * @returns {boolean} A boolean indicating if the folder was found.
  */
-function watchForFolder(folderName: string, interval = 1000): boolean {
+function watchForFolder(folderName: string, interval: number = 1000): boolean {
     console.info("watchForFolder() called");
     if (settings.enableVerbose) {console.log(`folderName :>> ${folderName}, interval :>> ${interval}`);}
     
@@ -36,19 +32,19 @@ function watchForFolder(folderName: string, interval = 1000): boolean {
 
 
 class UserSettings {
-    userDriveID: string | undefined;
+    userSettingsFileID: string | undefined;
     enableVerbose: boolean;
 
     constructor() {
         //default settings:
-        this.userDriveID = undefined;
+        this.userSettingsFileID = undefined;
         this.enableVerbose = true; // to change to false in production
 
 
         
         let userSettingsCheck = this.hasUserSettings();
         if (userSettingsCheck.outcome) {
-            this.userDriveID = userSettingsCheck.id;
+            this.userSettingsFileID = userSettingsCheck.id;
         } else {
             this.createUserSettings(userSettingsCheck.fix);
         }
@@ -67,7 +63,6 @@ class UserSettings {
         console.info("hasUserSettings() called");
 
         const folders = DriveApp.getFoldersByName("google-preset-calendar-script");
-
         
         if (this.enableVerbose) {console.log("checking if 'google-preset-calendar-script' exists...");}
         const folderExists = folders.hasNext();
@@ -100,21 +95,22 @@ class UserSettings {
             case possibleFixes.createFolder:
                 if (this.enableVerbose) {console.log("creating folder...");}
                 DriveApp.createFolder("google-preset-calendar-script");
-                watchForFolder("google-preset-calendar-script");
+                let isFolderFound: boolean = watchForFolder("google-preset-calendar-script");
+                if (!isFolderFound) {
+                    console.error("folder not found!");
+                    break;
+                }
                 this.createUserSettings(possibleFixes.createFile);
                 break;
             
             case possibleFixes.createFile:
                 if (this.enableVerbose) {console.log("creating spreadsheet...");}
-                const spreadsheet = SpreadsheetApp.create("Google_Preset_Calendar_Settings");
-                const spreadsheetID = spreadsheet.getId();
+                const templateSheet = SpreadsheetApp.openById("1MH5zaioBSi9ybuqjZiQ4mfrfbRlAAqufnU4QEMGnlI0")
+                const userSheet = templateSheet.copy("Google_Preset_Calendar_Settings");
+                const userSheetID = userSheet.getId();
 
-                if (this.enableVerbose) {console.log("inserting spreadsheet template...");}
-                const isTemplateInserted = insertSpreadsheetTemplate(spreadsheetID);
-                if (!isTemplateInserted) {console.error("spreadsheet template not inserted!")}
-
-                if (this.enableVerbose) {console.log(`spreadsheetID :>> ${spreadsheetID}, moving file to folder...`);}
-                const spreadsheetFile = DriveApp.getFileById(spreadsheetID);
+                if (this.enableVerbose) {console.log(`spreadsheetID :>> ${userSheetID}, moving file to folder...`);}
+                const spreadsheetFile = DriveApp.getFileById(userSheetID);
                 DriveApp.getFoldersByName("google-preset-calendar-script").next().addFile(spreadsheetFile);
                 DriveApp.getRootFolder().removeFile(spreadsheetFile);
                 break;
