@@ -39,16 +39,6 @@ class UserSettings {
         //default settings:
         this.userSettingsFileID = undefined;
         this.enableVerbose = true; // to change to false in production
-
-
-        
-        let userSettingsCheck = this.hasUserSettings();
-        if (userSettingsCheck.outcome) {
-            this.userSettingsFileID = userSettingsCheck.id;
-        } else {
-            this.createUserSettings(userSettingsCheck.fix);
-        }
-        
     }
 
 
