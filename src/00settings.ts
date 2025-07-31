@@ -4,30 +4,48 @@ enum possibleFixes {
     createFile = "createFile",
 }
 
+enum driveTypes {
+    folder = "folder",
+    file = "file",
+}
+
 /**
- * Waits for a folder to appear in the user's Drive.
- * @param {string} folderName The name of the folder to wait for.
- * @param {number} interval The interval in milliseconds to check for the folder's existence.
- * @returns {boolean} A boolean indicating if the folder was found.
+ * Waits for a folder or file to appear in the user's Drive.
+ * @param {string} name The name of the folder or file to wait for.
+ * @param {string} type The type to wait for, either 'folder' or 'file'.
+ * @param {number} interval The interval in milliseconds to check for the existence.
+ * @returns {boolean} A boolean indicating if the folder or file was found.
  */
-function watchForFolder(folderName: string, interval: number = 1000): boolean {
-    console.info("watchForFolder() called");
-    if (settings.enableVerbose) {console.log(`folderName :>> ${folderName}, interval :>> ${interval}`);}
+function watchForDriveItem(name: string, type: driveTypes, interval: number = 1000): boolean {
+    console.info("watchForDriveItem() called");
+    if (settings.enableVerbose) {console.log(`name :>> ${name}, type :>> ${type}, interval :>> ${interval}`);}
     
     let i = 0;
     while (i < 60) {
-        const folderExists = DriveApp.getFoldersByName(folderName).hasNext();
-        if (folderExists) {
-            if (settings.enableVerbose) {console.log("folder found!");}
+        let exists;
+        switch (type) {
+            case 'folder':
+                exists = DriveApp.getFoldersByName(name).hasNext();
+                break;
+            case 'file':
+                exists = DriveApp.getFilesByName(name).hasNext();
+                break;
+            default:
+                console.error("Invalid type provided. Only 'folder' or 'file' are allowed.");
+                return false;
+        }
+
+        if (exists) {
+            if (settings.enableVerbose) {console.log(`${type} found!`);}
             return true;
         }
-        
-        if (settings.enableVerbose) {console.log(`folder not found. sleeping for ${interval}ms...`);}
+
+        if (settings.enableVerbose) {console.log(`${type} not found. sleeping for ${interval}ms...`);}
         Utilities.sleep(interval);
         i++;
     }
 
-    return false
+    return false;
 }
 
 
@@ -85,7 +103,7 @@ class UserSettings {
             case possibleFixes.createFolder:
                 if (this.enableVerbose) {console.log("creating folder...");}
                 DriveApp.createFolder("google-preset-calendar-script");
-                let isFolderFound: boolean = watchForFolder("google-preset-calendar-script");
+                let isFolderFound: boolean = watchForDriveItem("google-preset-calendar-script", driveTypes.folder);
                 if (!isFolderFound) {
                     console.error("folder not found!");
                     break;
@@ -97,6 +115,11 @@ class UserSettings {
                 if (this.enableVerbose) {console.log("creating spreadsheet...");}
                 const templateSheet = SpreadsheetApp.openById("1MH5zaioBSi9ybuqjZiQ4mfrfbRlAAqufnU4QEMGnlI0")
                 const userSheet = templateSheet.copy("Google_Preset_Calendar_Settings");
+                let isSheetFound: boolean = watchForDriveItem("Google_Preset_Calendar_Settings", driveTypes.file);
+                if (!isSheetFound) {
+                    console.error("settings file not found!");
+                    return;
+                }
                 const userSheetID = userSheet.getId();
 
                 if (this.enableVerbose) {console.log(`spreadsheetID :>> ${userSheetID}, moving file to folder...`);}
