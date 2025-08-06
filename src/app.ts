@@ -4,16 +4,7 @@ const settings = new UserSettings();
 
 
 function test(): void {     
-    console.info("test() called");
-    
-    console.log('settings :>> ', settings);
-
-    let userSettingsCheck = settings.hasUserSettings();
-    if (userSettingsCheck.outcome) {
-        settings.userSettingsFileID = userSettingsCheck.id;
-    } else {
-        settings.createUserSettings(userSettingsCheck.fix);
-    }
+    settings.getUserSettings();
 }
 
 

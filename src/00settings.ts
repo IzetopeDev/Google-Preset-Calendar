@@ -50,12 +50,21 @@ function watchForDriveItem(name: string, type: driveTypes, interval: number = 10
 
 
 class UserSettings {
-    userSettingsFileID: string | undefined;
+    fileID: string | undefined;
+    virtualSheets: {
+        settings: Array<Array<any>> | undefined,
+        presets: Array<Array<any>> | undefined
+    };
     enableVerbose: boolean;
 
     constructor() {
         //default settings:
-        this.userSettingsFileID = undefined;
+        this.fileID = undefined;
+        this.virtualSheets = {
+            settings: undefined,
+            presets: undefined
+        };
+
         this.enableVerbose = true; // to change to false in production
     }
 
@@ -95,7 +104,7 @@ class UserSettings {
 
     }
 
-    createUserSettings(suggestedSolution: possibleFixes | undefined): void  {
+    createUserSettings(suggestedSolution: possibleFixes | undefined): string | undefined  {
         console.info("createUserSettings() called");
         if (this.enableVerbose) {console.log(`suggestedSolution :>> ${suggestedSolution}`);}
 
@@ -118,7 +127,7 @@ class UserSettings {
                 let isSheetFound: boolean = watchForDriveItem("Google_Preset_Calendar_Settings", driveTypes.file);
                 if (!isSheetFound) {
                     console.error("settings file not found!");
-                    return;
+                    return undefined;
                 }
                 const userSheetID = userSheet.getId();
 
@@ -126,7 +135,7 @@ class UserSettings {
                 const spreadsheetFile = DriveApp.getFileById(userSheetID);
                 DriveApp.getFoldersByName("google-preset-calendar-script").next().addFile(spreadsheetFile);
                 DriveApp.getRootFolder().removeFile(spreadsheetFile);
-                break;
+                return userSheetID;
 
             case undefined:
                 console.error("param suggestedSolution :>> undefined. No fixes to apply. Was this function illegally called?");
@@ -135,6 +144,60 @@ class UserSettings {
                 console.error("uncaught instance of param suggestedSolution! Unable to apply fixes for user settings. Was this function illegally called?");
                 break;
         }
+    }
+
+    getUserSettings(): void {
+        console.info("getUserSettings() called");
+
+        const userSettingsCheck = settings.hasUserSettings();
+        if (userSettingsCheck.outcome) {
+            this.fileID = userSettingsCheck.id;
+        } else if (!userSettingsCheck.outcome) {
+            settings.createUserSettings(userSettingsCheck.fix);
+
+        }
+        
+        
+        const settingsSheet = SpreadsheetApp.openById(this.fileID!);
+        // TODO: try catch settings and presets if they don't exist.
+
+        try {
+            let sheetSettings = settingsSheet.getSheetByName("Settings");
+            let sheetPresets = settingsSheet.getSheetByName("Presets");
+            if (sheetSettings === null || sheetPresets === null) {
+                throw new Error(`settings or presets not found in ${this.fileID}`);
+            }
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+
+        this.virtualSheets.settings = settingsSheet.getSheetByName("Settings")?.getDataRange().getValues()
+        this.virtualSheets.presets = settingsSheet.getSheetByName("Presets")?.getDataRange().getValues()
+        if (this.enableVerbose) {
+            console.log(`this.virtualSheets.settings :>> ${this.virtualSheets.settings}`);
+            console.log(`this.virtualSheets.presets :>> ${this.virtualSheets.presets}`);
+        };
+
+
+        for (let i = 0; i < this.virtualSheets.settings![0].length; i++) {
+            let settingName = this.virtualSheets.settings![i][0];
+            let settingValue = this.virtualSheets.settings![i][1];
+            if (this.enableVerbose) {
+                console.log('settingName :>> ', settingName);
+                console.log('settingValue :>> ', settingValue);
+            }
+
+            switch (settingName) {
+                case "enableVerbose":
+                    this.enableVerbose = settingValue;
+                    break;
+            }
+        }
+
+        if (this.enableVerbose) {
+            console.log('settings :>> ', this);
+        };
     }
 }
 
