@@ -13,11 +13,14 @@ function test(): void {
  * @param {string} file The name of the file to include.
  * @returns {string} The content of the included file.
  */
-function include(file: string): string {
+function include(filename:string): string {
     console.info('include() called');
-    if (settings.enableVerbose) {console.log('file :>> ', file);}
+    if (settings.enableVerbose) {console.log('filename :>> ', filename);}
 
-    return HtmlService.createHtmlOutputFromFile(file).getContent();
+    return HtmlService
+    .createTemplateFromFile(filename)
+    .evaluate()
+    .getContent();
 }
 
 

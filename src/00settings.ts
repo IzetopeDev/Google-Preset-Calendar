@@ -159,8 +159,8 @@ class UserSettings {
         
         
         const settingsSheet = SpreadsheetApp.openById(this.fileID!);
-        // TODO: try catch settings and presets if they don't exist.
 
+        // honestly I have no idea if this works.
         try {
             let sheetSettings = settingsSheet.getSheetByName("Settings");
             let sheetPresets = settingsSheet.getSheetByName("Presets");

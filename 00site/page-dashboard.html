@@ -1,15 +1,10 @@
-<div class="dashboard-container" id="dashboard" style="display:none;">
+<div class="dashboard-container" id="dashboard">
     <h1>Dashboard</h1>
     
     <div class="dashboard-grid">
-        <?!= getCalendar() ?>
-        <select name="calendars" id="calendar-selector">
-            <!-- 
-                JS-filled options 
-                <option value="calendarURL from sheetsDatabase">Calendar Name</option> 
-            -->
-        </select>
-        <?!= include("00site/module-presetManager") ?>
-        <?!= include("00site/module-groupAvailableTimings") ?>
+        <!-- calendar iframe in this line -->
+        <div id="moduleSelector-001"><?!= include("00site/module-presetManager.html") ?></div>
+        <div id="moduleSelector-002"><?!= include("00site/module-groupAvailableTimings.html") ?></div>
+        <div id="moduleSelector-003"></div>
     </div>
 </div>
