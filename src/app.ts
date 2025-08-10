@@ -2,11 +2,14 @@
 const settings = new UserSettings();
         
 
-
+// testing area
 function test(): void {     
     settings.getUserSettings();
 }
 
+/*
+* Helper functions
+*/
 
 /**
  * Includes a file in the current page.
@@ -22,6 +25,10 @@ function include(filename:string): string {
     .evaluate()
     .getContent();
 }
+
+
+// button click handlers go here as well
+
 
 
 /*
