@@ -1,8 +1,10 @@
-<?!= include('style-dashboard') ?>
-<div class="dashboard-container" id="dashboard" style="display:none;">
-    <h2>Dashboard</h2>
+<div class="dashboard-container" id="dashboard">
+    <h1>Dashboard</h1>
+    
     <div class="dashboard-grid">
-        <?!= include("00site/module-groupAvailableTimings") ?>
-        <?!= include("00site/module-presetManager") ?>
+        <!-- calendar iframe in this line -->
+        <div id="moduleSelector-001"><?!= include("00site/module-presetManager.html") ?></div>
+        <div id="moduleSelector-002"><?!= include("00site/module-groupAvailableTimings.html") ?></div>
+        <div id="moduleSelector-003"></div>
     </div>
 </div>

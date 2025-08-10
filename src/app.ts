@@ -1,14 +1,33 @@
+// init globals
+const settings = new UserSettings();
+        
+
+// testing area
+function test(): void {     
+    settings.getUserSettings();
+}
+
+/*
+* Helper functions
+*/
+
 /**
  * Includes a file in the current page.
  * @param {string} file The name of the file to include.
  * @returns {string} The content of the included file.
  */
-function include(file: string): string {
+function include(filename:string): string {
     console.info('include() called');
-    if (enableVerbose) {console.log('file :>> ', file);}
+    if (settings.enableVerbose) {console.log('filename :>> ', filename);}
 
-    return HtmlService.createHtmlOutputFromFile(file).getContent();
+    return HtmlService
+    .createTemplateFromFile(filename)
+    .evaluate()
+    .getContent();
 }
+
+
+// button click handlers go here as well
 
 
 
@@ -26,7 +45,7 @@ function include(file: string): string {
  */
 function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutput {
     console.info('doGet() called');
-    if (enableVerbose) {
+    if (settings.enableVerbose) {
         console.log('e :>> ', e);
         console.log('Session :>> ', Session);
         console.log('Session.getActiveUser() :>> ', Session.getActiveUser().toString());
@@ -37,10 +56,6 @@ function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutpu
     return HtmlService
         .createTemplateFromFile("00site/index.html")
         .evaluate();
-}
-    console.info('doGet() called');
-    console.log('e :>> ', e);
-    return HtmlService.createHtmlOutputFromFile("00site/index");
 }
 
 
