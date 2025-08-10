@@ -1,9 +1,10 @@
 .clasp*
-
+appsscript.json
 
 node_modules/
+*.bat
+deployVersion.ts
 
 tsconfig.json
-dist/
-
-
+.vscode/
+01dist/
