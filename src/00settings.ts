@@ -104,6 +104,12 @@ class UserSettings {
 
     }
 
+    /**
+     * Creates user settings based on the suggested solution. 
+     * @param {possibleFixes | undefined} suggestedSolution - The suggested action to perform. 
+     * @returns {string | undefined} The ID of the created settings file if successful, 
+     * or undefined if the creation fails.
+     */
     createUserSettings(suggestedSolution: possibleFixes | undefined): string | undefined  {
         console.info("createUserSettings() called");
         if (this.enableVerbose) {console.log(`suggestedSolution :>> ${suggestedSolution}`);}
@@ -146,6 +152,10 @@ class UserSettings {
         }
     }
 
+    /**
+     * Gets all user settings from the user's personal database (stored as a spreadsheet).
+     * Creates the spreadsheet if it does not exist.
+     */
     getUserSettings(): void {
         console.info("getUserSettings() called");
 
@@ -200,4 +210,3 @@ class UserSettings {
         };
     }
 }
-
