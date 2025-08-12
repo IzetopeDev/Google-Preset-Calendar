@@ -28,31 +28,36 @@ function initPresets(): string {
         calendarID: string,
         name: string,
     }> = [];
-    let output: string = "";
-
+    
     if (settings.enableVerbose) {console.log('settings.virtualSheets.presets :>> ', settings.virtualSheets.presets);}
     for (let i = 0; i < settings.virtualSheets.presets![0].length; i++) {
         presets.push({
             calendarID: settings.virtualSheets.presets![0][i],
             name: settings.virtualSheets.presets![1][i],
-        })        
+        });
     }
     presets.shift();
     if (settings.enableVerbose) {console.log('presets :>> ', presets);}
 
+    let htmlParts: string[] = [];
     presets.forEach((preset) => {
         existingButtons.push(preset);
-        output.concat(
+        htmlParts.push(
             HtmlService
-            .createHtmlOutput()
-            .setContent(`<button onclick="google.scripts.run.presetCaller(${preset})" class="primary" style="background-color:${getRandomColor()}">${preset.name}</button>`)
-            .getContent()
+                .createHtmlOutput()
+                .setContent(
+                    `<button onclick="google.script.run.presetCaller('${preset.calendarID}')" class="primary" style="background-color:${getRandomColor()}">${preset.name}</button>`
+                )
+                .getContent()
         );
     });
+
+    const output = htmlParts.join('');
+
     if (settings.enableVerbose) {
         console.log('output :>> ', output);
         console.log('existingButtons :>> ', existingButtons);
-    };
+    }
+
     return output;
 }
-
