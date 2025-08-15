@@ -1,7 +1,7 @@
 <div class="card" id="preset-manager-container">
     <h3>Preset Manager</h3>
     <div id="preset-manager">
-        <?!= initPresets() ?>
+        <?!= new PresetManager().initPresets() ?>
         <button class="primary" onclick="openPresetEditor()">Edit</button>
     </div>
 </div>

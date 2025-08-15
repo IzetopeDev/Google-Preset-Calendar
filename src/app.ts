@@ -54,15 +54,26 @@ function include(filename:string): string {
     .getContent();
 }
 
-
+/**
+ * Generates a random hex color code.
+ * @returns {string} A string representing a color in hex code format.
+ */
+function getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
 // button click handlers
-function presetCaller(preset: {name: string, calendarID: string}) {
+function getPreset(preset: {name: string, calendarID: string}) {
     console.info('presetCaller() called');
     if (settings.enableVerbose) {console.log('preset :>> ', preset);}
 }
 
-
+function createPreset() {}
 
 /* ---------------------- */ 
 /* core caller functions  */

@@ -20,87 +20,107 @@ interface ReminderHelper {
 interface PresetHelper {
     calendarID: string,
     name: string,
-    buttonColor: string | undefined,
-    isAllDay: boolean | undefined,
-    startTime: number | undefined,
-    endTime: number | undefined,
-    reminders: ReminderHelper[] | undefined,
-    eventColor: string | undefined,
-    description: string | undefined,
+    buttonColor?: string,
+    isAllDay?: boolean,
+    startTime?: number,
+    endTime?: number,
+    reminders?: ReminderHelper[],
+    eventColor?: string,
+    description?: string,
 }
 
 class Preset {
     calendarID: string;
     name: string;
-    buttonColor: string | undefined;
-    isAllDay: boolean | undefined;
-    startTime: number | undefined;
-    endTime: number | undefined;
-    reminders: ReminderHelper[] | undefined;
-    eventColor: string | undefined;
-    description: string | undefined;
-
-    constructor(helperObject: PresetHelper);
-    constructor(
-        calendarID: string,
-        name: string,
-        buttonColor: string | undefined,
-        isAllDay: boolean | undefined,
-        startTime: number | undefined,
-        endTime: number | undefined,
-        reminders: ReminderHelper[] | undefined,
-        eventColor: string | undefined,
-        description: string | undefined,
-    );
+    buttonColor?: string;
+    isAllDay?: boolean;
+    startTime?: number;
+    endTime?: number;
+    reminders?: ReminderHelper[];
+    eventColor?: string;
+    description?: string;
 
     constructor(
-        helperOrCalID: PresetHelper | string,
-        name?: string,
-        buttonColor?: string | undefined,
-        isAllDay?: boolean | undefined,
-        startTime?: number | undefined,
-        endTime?: number | undefined,
-        reminders?: ReminderHelper[] | undefined,
-        eventColor?: string | undefined,
-        description?: string | undefined,
+        helperObject: PresetHelper 
+        = {
+            calendarID: '',
+            name: '',
+            buttonColor: getRandomColor(),
+            isAllDay: true,
+            startTime: undefined,
+            endTime: undefined,
+            reminders: [],
+            eventColor: getRandomColor(),
+            description: '',
+        }
     ) {
         console.info("constructing preset obj");
         if (settings.enableVerbose) {
-            console.log('helperOrCalID :>> ', helperOrCalID);
+            console.log('helperObject :>> ', helperObject);
         }
 
-        if (typeof(helperOrCalID) === "string") {
-            if (settings.enableVerbose) {
-                console.log('name :>> ', name);
-                console.log('buttonColor :>> ', buttonColor);
-                console.log('isAllDay :>> ', isAllDay);
-                console.log('startTime :>> ', startTime);
-                console.log('endTime :>> ', endTime);
-                console.log('reminders :>> ', reminders);
-                console.log('eventColor :>> ', eventColor);
-                console.log('description :>> ', description);
-            }
-
-            this.calendarID = helperOrCalID
-            this.name = name!
-            this.buttonColor = buttonColor
-            this.isAllDay = isAllDay
-            this.startTime = startTime
-            this.endTime = endTime
-            this.reminders = reminders
-            this.eventColor = eventColor
-            this.description = description
-
-        } else {
-            this.calendarID = helperOrCalID.calendarID
-            this.name = helperOrCalID.name
-            this.buttonColor = helperOrCalID.buttonColor
-            this.isAllDay = helperOrCalID.isAllDay
-            this.startTime = helperOrCalID.startTime
-            this.endTime = helperOrCalID.endTime
-            this.reminders = helperOrCalID.reminders
-            this.eventColor = helperOrCalID.eventColor
-            this.description = helperOrCalID.description
-        }
+        this.calendarID = helperObject.calendarID
+        this.name = helperObject.name
+        this.buttonColor = helperObject.buttonColor
+        this.isAllDay = helperObject.isAllDay
+        this.startTime = helperObject.startTime
+        this.endTime = helperObject.endTime
+        this.reminders = helperObject.reminders
+        this.eventColor = helperObject.eventColor
+        this.description = helperObject.description
+        
     }
+}
+
+class PresetManager {
+    presets: Preset[];
+    constructor() {
+        this.presets = [];
+    }
+
+    initPresets() {
+        console.info("initPresets() called");
+        
+        if (settings.enableVerbose) {console.log('settings.virtualSheets.presets :>> ', settings.virtualSheets.presets);}
+        for (let i = 1; i < settings.virtualSheets.presets![0].length; i++) {
+            this.presets.push( 
+                new Preset({
+                    calendarID: settings.virtualSheets.presets![0][i],
+                    name: settings.virtualSheets.presets![1][i],
+                }
+            ));
+        }
+        if (settings.enableVerbose) {console.log('PresetManager.presets :>> ', this.presets);}
+
+        let htmlParts: string[] = [];
+        this.presets.forEach((preset) => {
+            existingButtons.push(preset);
+            htmlParts.push(
+                HtmlService
+                    .createHtmlOutput()
+                    .setContent(
+                        `<button onclick="google.script.run.callPreset('${preset.calendarID}')" class="primary" style="background-color:${getRandomColor()}">${preset.name}</button>`
+                    )
+                    .getContent()
+            );
+        });
+
+        const output = htmlParts.join('');
+
+        if (settings.enableVerbose) {
+            console.log('output :>> ', output);
+            console.log('existingButtons :>> ', existingButtons);
+        }
+
+        return output;
+
+    }
+
+    addPreset(preset: Preset) {
+
+    }
+    getPreset() {
+
+    }
+        
 }

@@ -1,11 +1,3 @@
-function getRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
 
 function getPresets(): Array<any> {
     // I should be throwing errors. so that stops if no presets or skips it?
@@ -24,10 +16,7 @@ function getPresets(): Array<any> {
 
 function initPresets(): string {
     console.info("initPresets() called");
-    let presets: Array<{
-        calendarID: string,
-        name: string,
-    }> = [];
+    let presets: Array<PresetHelper> = [];
     
     if (settings.enableVerbose) {console.log('settings.virtualSheets.presets :>> ', settings.virtualSheets.presets);}
     for (let i = 0; i < settings.virtualSheets.presets![0].length; i++) {
@@ -46,7 +35,7 @@ function initPresets(): string {
             HtmlService
                 .createHtmlOutput()
                 .setContent(
-                    `<button onclick="google.script.run.presetCaller('${preset.calendarID}')" class="primary" style="background-color:${getRandomColor()}">${preset.name}</button>`
+                    `<button onclick="google.script.run.callPreset('${preset.calendarID}')" class="primary" style="background-color:${getRandomColor()}">${preset.name}</button>`
                 )
                 .getContent()
         );
