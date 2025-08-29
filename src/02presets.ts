@@ -32,43 +32,45 @@ interface PresetHelper {
 class Preset {
     calendarID: string;
     name: string;
-    buttonColor?: string;
-    isAllDay?: boolean;
-    startTime?: number;
-    endTime?: number;
-    reminders?: ReminderHelper[];
-    eventColor?: string;
-    description?: string;
+    buttonColor: string;
+    isAllDay: boolean;
+    startTime: number;
+    endTime: number;
+    reminders: ReminderHelper[];
+    eventColor: string;
+    description: string;
 
-    constructor(
-        helperObject: PresetHelper 
-        = {
-            calendarID: '',
+    constructor(presetHelper: PresetHelper) {
+        console.info("constructing preset obj");
+        
+        const defaultHelper =  {
+            calendarID: '', // should make this default calendar -- also not sure how to get the user to input this. 
             name: '',
             buttonColor: getRandomColor(),
             isAllDay: true,
-            startTime: undefined,
-            endTime: undefined,
-            reminders: [],
-            eventColor: getRandomColor(),
+            startTime: 0,
+            endTime: 0,
+            reminders: [], // should make this default reminder 30min before.
+            eventColor: '',
             description: '',
-        }
-    ) {
-        console.info("constructing preset obj");
+        } 
+
+        const initialisedHelper = {...defaultHelper, ...presetHelper};
+
         if (settings.enableVerbose) {
-            console.log('helperObject :>> ', helperObject);
+            console.log(presetHelper);
+            console.log(initialisedHelper);
         }
 
-        this.calendarID = helperObject.calendarID
-        this.name = helperObject.name
-        this.buttonColor = helperObject.buttonColor
-        this.isAllDay = helperObject.isAllDay
-        this.startTime = helperObject.startTime
-        this.endTime = helperObject.endTime
-        this.reminders = helperObject.reminders
-        this.eventColor = helperObject.eventColor
-        this.description = helperObject.description
-        
+        this.calendarID = initialisedHelper.calendarID
+        this.name = initialisedHelper.name
+        this.buttonColor = initialisedHelper.buttonColor
+        this.isAllDay = initialisedHelper.isAllDay
+        this.startTime = initialisedHelper.startTime
+        this.endTime = initialisedHelper.endTime
+        this.reminders = initialisedHelper.reminders
+        this.eventColor = initialisedHelper.eventColor
+        this.description = initialisedHelper.description        
     }
 }
 
