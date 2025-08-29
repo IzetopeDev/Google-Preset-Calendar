@@ -1,10 +1,7 @@
-<div class="card" id="preset-manager">
+<div class="card" id="preset-manager-container">
     <h3>Preset Manager</h3>
-    <div>
-        <select id="preset-selector">
-            <option value="">Select a Preset</option>
-            <!-- JS-filled options -->
-        </select>
+    <div id="preset-manager">
+        <?!= new PresetManager().initPresets() ?>
         <button class="primary" onclick="openPresetEditor()">Edit</button>
     </div>
 </div>

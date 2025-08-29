@@ -1,19 +1,47 @@
 // init globals
 const settings = new UserSettings();
+const existingButtons: Array<{
+    calendarID: string;
+    name: string;
+}> = [];
         
 
 // testing area
-function test(): void {     
-    settings.getUserSettings();
+function test(): string {
+    
+    return HtmlService
+        .createTemplateFromFile('00site/test-HtmlTemplate.html')
+        .evaluate()
+        .getContent();
 }
 
-/*
-* Helper functions
-*/
+function getH1(option: number): string {
+    switch (option) {
+        case 1:
+            return 'Hello World!';
+        case 2:
+            return 'Goodbye World!';
+        default:
+            return 'where option...';
+    }
+}
+
+/* ---------------------- */
+/* Helper functions       */
+/* ---------------------- */
 
 /**
  * Includes a file in the current page.
  * @param {string} file The name of the file to include.
+ * @returns {string} The content of the included file.
+ */
+function __init__() {
+    console.info('__init__() called');
+}
+
+/**
+ * Includes a file in the current page.
+ * @param {string} filename The name of the file to include.
  * @returns {string} The content of the included file.
  */
 function include(filename:string): string {
@@ -26,15 +54,31 @@ function include(filename:string): string {
     .getContent();
 }
 
+/**
+ * Generates a random hex color code.
+ * @returns {string} A string representing a color in hex code format.
+ */
+function getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
 
-// button click handlers go here as well
+// button click handlers
+function getPreset(preset: {name: string, calendarID: string}) {
+    console.info('presetCaller() called');
+    if (settings.enableVerbose) {console.log('preset :>> ', preset);}
+}
 
+function createPreset() {}
 
-
-/*
-* core caller functions
-* DO NOT REMOVE
-*/
+/* ---------------------- */ 
+/* core caller functions  */
+/* DO NOT REMOVE          */ 
+/* ---------------------- */
 
 
 
@@ -52,10 +96,13 @@ function doGet(e:GoogleAppsScript.Events.DoGet): GoogleAppsScript.HTML.HtmlOutpu
         console.log('Session.getEffectiveUser() :>> ', Session.getEffectiveUser().toString());
         console.log('Session.getActiveUserLocale() :>> ', Session.getActiveUserLocale().toString());
     }
+
+    settings.getUserSettings();
     
     return HtmlService
         .createTemplateFromFile("00site/index.html")
-        .evaluate();
+        .evaluate()
+        .setTitle("Google Preset Calendar Script");
 }
 
 
