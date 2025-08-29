@@ -1,9 +1,9 @@
 // init globals
 const settings = new UserSettings();
-const existingButtons: Array<{
+const existingButtons: {
     calendarID: string;
     name: string;
-}> = [];
+}[] = [];
         
 
 // testing area

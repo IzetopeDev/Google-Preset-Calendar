@@ -40,6 +40,11 @@ class Preset {
     eventColor: string;
     description: string;
 
+    /**
+     * Constructs a Preset object from a passed PresetHelper object.
+     * If any of the properties are missing from the PresetHelper object, they are set to default values.
+     * @param {PresetHelper} presetHelper - The object which contains the properties to be set on the Preset object.
+     */
     constructor(presetHelper: PresetHelper) {
         console.info("constructing preset obj");
         
@@ -80,6 +85,11 @@ class PresetManager {
         this.presets = [];
     }
 
+    /**
+     * Initialises the PresetManager's preset list from settings.virtualSheets.presets.
+     * Also generates the HTML for the preset buttons in the dashboard and stores them in the global existingButtons array.
+     * @returns The HTML string of the preset buttons.
+     */
     initPresets() {
         console.info("initPresets() called");
         
@@ -121,6 +131,7 @@ class PresetManager {
     addPreset(preset: Preset) {
 
     }
+    
     getPreset() {
 
     }
